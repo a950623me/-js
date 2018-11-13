@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+	*{
+		margin: 0px;
+		padding: 0px;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-tap-highlight-color: transparent;
+	}
+    html{height:100%;}
+    body{width: 100%;height:100%;margin:0;}
+    .wrap{position: relative;overflow: hidden;width: 100%;height: 2000px;}
+    .box{
+    	width: 100%;
+    	list-style: none;
+    	/*transform:translateX(-16.6667%);*/
+    }
+    li{
+        list-style: none;
+    }
+    .box li{float:left;}
+    .box{
+        position: absolute;;
+        height: 2000px;
+        width: 100%;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: red;
+        z-index: 9;
+    }
+    .box1{
+        height: 2000px;
+        font-size: 100px;
+        line-height: 2000px;
+        font-weight: bold;
+        color: #fff;
+        text-align: center;
+        box-sizing:border-box;
+        
+    }
+    .box2{
+        background: yellow;
+    }
+    .box3{
+        background: yellowgreen;
+    }
+    .box4{
+        background: orange;
+    }
+    .box5{
+        background: cyan;
+    }
+    .num{
+        
+        height: 60px;
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        z-index: 99;
+        display: table;
+        transform: translateX(-50%);
+    }
+    .num::after{
+        content: "";
+        display: block;
+        clear: both;
+        overflow: hidden;
+       
+    }
+    .num li{
+        float: left;
+        width: 20px;
+        height: 20px;
+        background: #333;
+        border-radius: 50%;
+        margin: 0 10px;
+        box-sizing: border-box;
+        border:1px solid #fff;
+
+    }
+    .num .active{
+        background: #fff;
+    }
+	</style>
+</head>
+<body>
+    <div class="wrap">
+    	<ul class="box">
+    	    <li class="box1 box5">8</li>
+    		<li class="box1 box2">1</li>
+    		<li class="box1 box3">2</li>
+    		<li class="box1 box4">3</li>
+    		<li class="box1 box5">4</li>
+    		<li class="box1 box2">5</li>
+    		<li class="box1 box3">6</li>
+    		<li class="box1 box4">7</li>
+    		<li class="box1 box5">8</li>
+    		<li class="box1 box2">1</li>
+        </ul>
+        <ul class="num">
+            <li class="active"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <script>
+            var aLi = document.querySelectorAll(".box li");
+		    var box = document.querySelector('.box');
+            var box1 = document.querySelectorAll(".num li");
+		    var wrap = document.querySelector('.wrap');
+		    var aLiWidth = box.offsetWidth;
+		    // 设置盒子的宽度
+		    box.style.width = aLi.length*100 + '%';
+		    console.log('aLiWidth: ' + aLiWidth)
+		 //   wrap.style.height = aLi[0].offsetHeight + 'px';
+		   // box.style.transform = 'translateX(-'+100/aLi.length + '%'+')';
+            box.style.left = '-'+100+'%';
+		    for(var i=0;i<aLi.length;i++){
+		        aLi[i].style.width = 1/aLi.length * 100 + '%';
+		    };
+		    //初始化手指坐标点
+            wrap.addEventListener("touchstart",function(e){
+                startPoint  = e.changedTouches[0].pageX;
+                startEle = box.offsetLeft;
+                console.log(startEle)
+            })
+            //手指按下
+            wrap.addEventListener("touchmove",function(e){
+                   currentPoint = e.changedTouches[0].pageX;
+                   var disX = startPoint-currentPoint;
+                   console.log(startEle);
+                   var left = -disX+startEle;
+                   console.log(left);
+                   box.style.left = left+'px';
+            })
+            //手指抬起
+            wrap.addEventListener("touchend",function(e){
+                   var left = box.style.left;
+                   
+                   console.log(parseFloat(left.split("px")[0].substr(1)));
+                   var currNum = Math.round(parseFloat(left.split("px")[0].substr(1))/aLiWidth);
+                   for(var i = 0;i<box1.length;i++){
+                       box1[i].className='';
+                   }
+                   if(currNum==9){
+                        box.style.left = -aLiWidth*1+"px";
+                        box1[0].className='active';
+                   }else if(currNum==0){
+                        box.style.left = -aLiWidth*8+"px";
+                        box1[box1.length-1].className='active';
+                   }else{
+                        box.style.left = -aLiWidth*currNum+"px";
+                        box1[currNum-1].className='active';
+                   }
+                  
+                   console.log(currNum);
+                   
+            })
+    </script>
+</body>
+</html>
